@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 import time
-
 import scrapy
-from scrapy.crawler import CrawlerProcess
+from util.tool import get_abs_url
 
 
 class QuestionsSpider(scrapy.Spider):
@@ -11,8 +10,9 @@ class QuestionsSpider(scrapy.Spider):
     allowed_domains = ['zhihu.com']
 
     GET_LIMIT = '100'
-    DATA_DIR = 'D:/dev/py_projects/zhihu_text/zh_scrapy/zh_spider/data'
+    DATA_DIR = get_abs_url('data')
 
+    filename_suffix = time.strftime('%y%m%d', time.localtime()) + '.txt'
     sysu_topic_id = '19608566'
     scut_topic_id = '19599737'
     gzhemc_topic_id = '19608544'
@@ -61,11 +61,13 @@ class QuestionsSpider(scrapy.Spider):
 
         else:
             print(str(len(self.qa_api_urls)) + " questions crawled")
-            with open(self.DATA_DIR + '/question_urls_gzhemc_180621.txt', 'w', encoding='utf-8') as urls_file:
+            urls_url = self.DATA_DIR + 'question_urls_gzhemc_' + self.filename_suffix
+            with open(urls_url, 'w', encoding='utf-8') as urls_file:
                 for url in self.qa_api_urls:
                     urls_file.write(url + '\n')
+            titles_url = self.DATA_DIR + 'question_titles_gzhemc_' + self.filename_suffix
             cnt = 0
-            with open(self.DATA_DIR + '/question_titles_gzhemc_180621.txt', 'w', encoding='utf-8') as titles_file:
+            with open(titles_url, 'w', encoding='utf-8') as titles_file:
                 for title in self.qa_api_titles:
                     titles_file.write(title + '\n')
                     cnt += 1

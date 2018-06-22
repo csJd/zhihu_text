@@ -3,7 +3,8 @@ import json
 import time
 import re
 import scrapy
-from scrapy.crawler import CrawlerProcess
+
+from util.tool import get_abs_url
 
 
 class QaSpider(scrapy.Spider):
@@ -15,7 +16,7 @@ class QaSpider(scrapy.Spider):
         'authorization': 'oauth c3cef7c66a1843f8b3a9e6a1e3160e20',
     }
 
-    DATA_DIR = 'D:/dev/py_projects/zhihu_text/zh_scrapy/zh_spider/data'
+    DATA_DIR = get_abs_url('data')
 
     def start_requests(self):
         with open(self.DATA_DIR + '/question_urls_gzhemc_180621.txt', 'r') as qa_files:
@@ -47,8 +48,3 @@ class QaSpider(scrapy.Spider):
             yield scrapy.Request(url=next_page_url, callback=self.parse, headers=self.headers)
         else:
             pass
-
-
-# process = CrawlerProcess()
-# process.crawl(QaSpider)
-# process.start()  # the script will block here until the crawling is finished
